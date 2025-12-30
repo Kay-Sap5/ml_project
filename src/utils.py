@@ -5,6 +5,8 @@ from src.exception import CustomException
 import pickle
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
+from src.logger import logging
+import catboost
 
 def save_object(file_path , obj):
     try:
@@ -23,7 +25,8 @@ def evaluate_model(x_train,y_train,x_test,y_test,models,params):
         print("Entered Evaluate_Model.......")
         report = {}
 
-        for i in range(len(list(models))):
+        for i in range(len(list(models.keys()))):
+            
             model = list(models.values())[i]
             param = params[list(models.keys())[i]]
             gs = GridSearchCV(model,param_grid=param,cv=3,n_jobs=-1)
@@ -39,8 +42,22 @@ def evaluate_model(x_train,y_train,x_test,y_test,models,params):
             test_score  = r2_score(y_test,y_test_pred)
 
             report[list(models.keys())[i]] = test_score
+            logging.info(f"Model Training ---- > {i}")
+
+            
+
 
         return report
     
+    except Exception as e:
+        raise CustomException(e,sys)
+    
+
+def load_object(file_path):
+    try:
+        with open(file_path ,'rb') as file_obj:
+            obj = pickle.load(file_obj)
+        return obj
+
     except Exception as e:
         raise CustomException(e,sys)

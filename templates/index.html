@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>prediction interface</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --primary: #4f46e5;
+            --text: #1f2937;
+            --border: #d1d5db;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px; /* Reduced padding for mobile */
+        }
+
+        .container {
+            background: var(--card);
+            padding: 1.5rem; /* Slightly smaller padding for mobile */
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+        }
+
+        /* Desktop and Tablet responsiveness */
+        @media (min-width: 640px) {
+            .container {
+                padding: 2rem;
+            }
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            text-align: center;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            text-transform: lowercase;
+        }
+
+        @media (min-width: 640px) {
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            text-transform: lowercase;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #fff;
+            text-transform: lowercase;
+            appearance: none; /* Uniform appearance across mobile browsers */
+        }
+
+        /* Custom arrow for select on mobile */
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: -1px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 1rem;
+            text-transform: lowercase;
+            -webkit-tap-highlight-color: transparent; /* Fix for mobile tap highlight */
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Student Math Score Predictor</h2>
+    <form action="{{url_for('predict_datapoint')}}" method="post">
+        
+        <!-- numerical features -->
+        <div class="form-group">
+            <label for="reading_score">reading score</label>
+            <input type="number" id="reading_score" name="reading_score" placeholder="e.g. 72" required>
+        </div>
+
+        <div class="form-group">
+            <label for="writing_score">writing score</label>
+            <input type="number" id="writing_score" name="writing_score" placeholder="e.g. 74" required>
+        </div>
+
+        <!-- categorical features -->
+        <div class="form-group">
+            <label for="gender">gender</label>
+            <select id="gender" name="gender" required>
+                <option value="male">male</option>
+                <option value="female">female</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="race_ethnicity">race ethnicity</label>
+            <select id="race_ethnicity" name="race_ethnicity" required>
+                <option value="group A">group A</option>
+                <option value="group B">group B</option>
+                <option value="group C">group C</option>
+                <option value="group D">group D</option>
+                <option value="group E">group E</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="parental_level_of_education">parental level of education</label>
+            <select id="parental_level_of_education" name="parental_level_of_education" required>
+                <option value="some high school">some high school</option>
+                <option value="high school">high school</option>
+                <option value="some college">some college</option>
+                <option value="associate's degree">associate's degree</option>
+                <option value="bachelor's degree">bachelor's degree</option>
+                <option value="master's degree">master's degree</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="lunch">lunch</label>
+            <select id="lunch" name="lunch" required>
+                <option value="standard">standard</option>
+                <option value="free/reduced">free/reduced</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="test_preparation_course">test preparation course</label>
+            <select id="test_preparation_course" name="test_preparation_course" required>
+                <option value="none">none</option>
+                <option value="completed">completed</option>
+            </select>
+        </div>
+
+        <button type="submit">submit prediction</button>
+    </form>
+    <h2>
+        The Result Is {{result}}
+    </h2>
+</div>
+
+</body>
+</html>

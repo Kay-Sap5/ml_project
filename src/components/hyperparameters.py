@@ -1,4 +1,3 @@
-from catboost import CatBoostRegressor
 from sklearn.ensemble import (
     RandomForestRegressor,
     AdaBoostRegressor,
@@ -7,6 +6,7 @@ from sklearn.ensemble import (
 from sklearn.linear_model import LinearRegression
 from xgboost import XGBRegressor
 from sklearn.tree import DecisionTreeRegressor
+
 
 models = {
         "LinearRegression":LinearRegression(),
@@ -56,4 +56,6 @@ param_grids = {
         "max_depth": [3, 5],
         "subsample": [0.8, 1.0]
     },
+
+
 }
